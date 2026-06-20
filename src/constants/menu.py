@@ -1,0 +1,10 @@
+OPTIONS = {
+    0: '1P - P1 vs COM',
+    1: '2P - P1 vs P2',
+    2: 'RECORDES',
+    3: 'SAIR'
+}
+
+ITEM_COLOR = (110,50,40)
+SELECTED_ITEM_COLOR = (230,100,20)
+TITLE_COLOR = (230,100,20)

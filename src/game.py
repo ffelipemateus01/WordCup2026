@@ -2,7 +2,6 @@ import sys
 import pygame
 from src.menu import Menu
 from src.constants.window import WIN_WIDTH, WIN_HEIGHT
-from src.constants.menu import OPTIONS as menuOptions
 from src.match import Match, MatchMode
 
 class Game:

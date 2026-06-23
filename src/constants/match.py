@@ -1,0 +1,29 @@
+from src.constants.window import WIN_WIDTH, WIN_HEIGHT
+import pygame
+
+GROUND_HEIGHT = 3.5 * WIN_HEIGHT / 4
+
+PLAYER_SPEED = 2
+BALL_SPEED = 3
+
+PLAYER_SIZE = (67, 90)
+BALL_SIZE = (45, 45)
+GOAL_SIZE = (127, 170)
+
+BALL_START_POSITION = (WIN_WIDTH / 2 - BALL_SIZE[0] / 2, WIN_HEIGHT / 4 - BALL_SIZE[1] / 2)
+GOAL1_POSITION = (-GOAL_SIZE[0] / 2, GROUND_HEIGHT - GOAL_SIZE[1])
+GOAL2_POSITION = (WIN_WIDTH - GOAL_SIZE[0] / 2, GROUND_HEIGHT - GOAL_SIZE[1])
+PLAYER1_POSITION = (GOAL1_POSITION[0] + GOAL_SIZE[0], PLAYER_SIZE[1])
+PLAYER2_POSITION = (GOAL2_POSITION[0] - PLAYER_SIZE[0], PLAYER_SIZE[1])
+
+PLAYER_GRAVITY_FORCE = 5
+BALL_GRAVITY_FORCE = 2
+
+PLAYER_KEY_UP = {'p1': pygame.K_w,
+                 'p2': pygame.K_UP}
+PLAYER_KEY_LEFT = {'p1': pygame.K_a,
+                   'p2': pygame.K_LEFT}
+PLAYER_KEY_RIGHT = {'p1': pygame.K_d,
+                    'p2': pygame.K_RIGHT}
+PLAYER_KEY_SHOOT = {'p1': pygame.K_LCTRL,
+                    'p2': pygame.K_RCTRL}

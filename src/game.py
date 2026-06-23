@@ -16,8 +16,12 @@ class Game:
             menu = Menu(self.window)
             choice = menu.show()
             if choice in (0, 1):
-                mode = '1P' if choice == 0 else '2P'
+                mode = MatchMode(choice)
                 match = Match(self.window, mode)
                 result = match.run()
-            pygame.quit()
-            sys.exit()
+            elif choice == 3:
+                pygame.quit()
+                quit()
+            else:
+                pygame.quit()
+                sys.exit()

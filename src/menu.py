@@ -3,9 +3,7 @@ from pygame import Surface, Rect
 from pygame.font import Font
 from src.constants.window import WIN_WIDTH, WIN_HEIGHT
 from src.constants.menu import OPTIONS as menuOptions
-from src.constants.menu import ITEM_COLOR, SELECTED_ITEM_COLOR, TITLE_COLOR
-
-GAP_MENU = 28
+from src.constants.menu import ITEM_COLOR, SELECTED_ITEM_COLOR, TITLE_COLOR, GAP_MENU
 
 class Menu:
     def __init__(self, window):
@@ -24,7 +22,7 @@ class Menu:
             for option, label in menuOptions.items():
                 self.drawText(label, (WIN_WIDTH / 2, (WIN_HEIGHT / 2) + (1 + option) * GAP_MENU), color=SELECTED_ITEM_COLOR if option == self.userOption else ITEM_COLOR)
             pygame.display.flip()
-            enter = self.getAction()
+            enter = self.processAction()
             if enter:
                 return self.userOption
 
@@ -40,7 +38,7 @@ class Menu:
         rect: Rect = surf.get_rect(center=center)
         self.window.blit(source=surf, dest=rect)
 
-    def getAction(self) -> bool:
+    def processAction(self) -> bool:
         '''Processa a ação do usuário.'''
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

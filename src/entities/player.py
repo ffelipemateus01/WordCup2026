@@ -6,6 +6,8 @@ class Player(IObject):
     def __init__(self, name: str, skin: int):
         super().__init__(name, f'{name}-{skin}')
         self.score = 0
+        self._originalFacingLeft = name == 'player2'
+        self._facingLeft = self._originalFacingLeft
 
     def __jump(self):
         if self.isOnGround():

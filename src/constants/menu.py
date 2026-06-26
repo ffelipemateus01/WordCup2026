@@ -1,7 +1,7 @@
 OPTIONS = {
     0: '1P - P1 vs COM',
     1: '2P - P1 vs P2',
-    2: 'RECORDES',
+    2: 'VITÓRIAS',
     3: 'SAIR'
 }
 

@@ -51,3 +51,11 @@ BALL_HIT_FORCE = 8
 BALL_LIFT_FORCE = 2
 BALL_HEAD_FORCE = 10
 BALL_AIR_RESISTENCE = 0.1
+
+WIN_SCORE = 1
+
+NAME_LABELS = {
+    'player1': 'Player 1',
+    'player2': 'Player 2',
+    'bot': 'COM'
+}

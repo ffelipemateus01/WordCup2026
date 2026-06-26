@@ -3,6 +3,7 @@ import pygame
 from src.menu import Menu
 from src.constants.window import WIN_WIDTH, WIN_HEIGHT
 from src.match import Match, MatchMode
+from src.ranking import Ranking
 
 class Game:
     def __init__(self):
@@ -17,7 +18,9 @@ class Game:
             if choice in (0, 1):
                 mode = MatchMode(choice)
                 match = Match(self.window, mode)
-                result = match.run()
+                match.run()
+            elif choice == 2:
+                Ranking(self.window).show()
             elif choice == 3:
                 pygame.quit()
                 quit()

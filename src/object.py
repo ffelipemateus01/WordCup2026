@@ -12,7 +12,8 @@ class IObject(ABC):
         self.gravityForce = ENTITIES_GRAVITY_FORCE[name]
         self.velocityY = 0
         self._originalSurf = self.surf
-        self._facingLeft = False
+        self._originalFacingLeft = False
+        self._facingLeft = self._originalFacingLeft
 
     @abstractmethod
     def move(self):
@@ -20,10 +21,10 @@ class IObject(ABC):
 
     def _transformSurf(self, goingLeft: bool):
         if goingLeft != self._facingLeft:
-            if not goingLeft:
+            if goingLeft == self._originalFacingLeft:
                 self.surf = self._originalSurf
             else:
-                self.surf = pygame.transform.flip(self.surf, True, False)
+                self.surf = pygame.transform.flip(self._originalSurf, True, False)
             self._facingLeft = goingLeft
 
     def __gravityAction(self):

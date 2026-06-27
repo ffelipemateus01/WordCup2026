@@ -1,2 +1,3 @@
 .venv
 flow.txt
+__pycache__/

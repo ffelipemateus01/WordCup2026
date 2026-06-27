@@ -21,9 +21,9 @@ class ElementFactory:
         return Goal(number, random)
 
     @staticmethod
-    def getNewPlayer(name: str) -> Player | Bot:
+    def getNewPlayer(name: str, ball: Ball | None = None) -> Player | Bot:
         random = randint(1, MAX_PLAYERS_SKINS)
-        newPlayer = Player(name, random) if 'player' in name else Bot(name, random)
+        newPlayer = Player(name, random) if 'player' in name else Bot(name, random, ball)
         return newPlayer
     
     @staticmethod

@@ -22,6 +22,10 @@ class Menu:
             self.window.blit(source=self.surf, dest=self.rect)
             self.drawText('Copa do Mundo', (WIN_WIDTH / 2, WIN_HEIGHT / 4.5), color=TITLE_COLOR, size=60, bold=True, shadow=True)
             self.drawText('2026', (WIN_WIDTH / 2, WIN_HEIGHT / 4.5 + GAP_MENU * 1.5), color=TITLE_COLOR, size=60, bold=True, shadow=True)
+            overlay = pygame.Surface((320, 140))
+            overlay.set_alpha(140)
+            overlay.fill((255, 255, 255))
+            self.window.blit(overlay, (128, 160))
             for option, label in menuOptions.items():
                 self.drawText(label, (WIN_WIDTH / 2, (WIN_HEIGHT / 2) + (1 + option) * GAP_MENU), color=SELECTED_ITEM_COLOR if option == self.userOption else ITEM_COLOR)
             self.drawLegend()
@@ -65,12 +69,12 @@ class Menu:
                 quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_DOWN:
-                    if self.userOption >= len(menuOptions.keys()):
+                    if self.userOption >= len(menuOptions.keys()) - 1:
                         self.userOption = 0
                         continue
                     self.userOption += 1
                 if event.key == pygame.K_UP:
-                    if self.userOption < 0:
+                    if self.userOption <= 0:
                         self.userOption = len(menuOptions.keys()) - 1
                         continue
                     self.userOption -= 1

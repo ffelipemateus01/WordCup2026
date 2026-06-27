@@ -25,17 +25,23 @@ class Ranking:
             if not ranking:
                 self.drawText('Nenhuma partida registrada', (WIN_WIDTH / 2, WIN_HEIGHT / 2), size=20)
             else:
+                overlay = pygame.Surface((200, 100))
+                overlay.set_alpha(140)
+                overlay.fill((255, 255, 255))
+                self.window.blit(overlay, (188, 65))
                 for i, (name, wins) in enumerate(ranking):
                     label = NAME_LABELS.get(name)
                     txt = f'{i + 1}. {label} - {wins}'
                     color = SELECTED_ITEM_COLOR if i == 0 else ITEM_COLOR
-                    self.drawText(txt, (WIN_WIDTH / 2, 90 + i * 24), color=color, size=22)
-            
+                    self.drawText(txt, (WIN_WIDTH / 2, 90 + i * 24), color=color, size=22, bold=i==0)
+            overlay = pygame.Surface((200, 30))
+            overlay.set_alpha(140)
+            overlay.fill((255, 255, 255))
+            self.window.blit(overlay, (188, 283))
             self.drawText('ENTER / ESC para voltar', (WIN_WIDTH / 2, WIN_HEIGHT - 25), size=16)
             pygame.display.flip()
             if self.processAction():
                 return
-
 
     def drawText(self, text, center: tuple, size: int = 22, color: tuple = ITEM_COLOR, bold: bool = False, shadow: bool = False):
         font: Font = pygame.font.SysFont(name="Arial", size=size, bold=bold)

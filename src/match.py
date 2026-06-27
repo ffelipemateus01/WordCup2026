@@ -22,8 +22,9 @@ class Match:
         self.objects: list[IObject] = []
         self.objects.extend(ElementFactory.getRandomField())
         self.objects.append(ElementFactory.getNewPlayer('player1'))
-        self.objects.append(ElementFactory.getNewPlayer('bot') if mode == MatchMode.SINGLE else ElementFactory.getNewPlayer('player2'))
-        self.objects.append(ElementFactory.getRandomBall())
+        ball = ElementFactory.getRandomBall()
+        self.objects.append(ball)
+        self.objects.append(ElementFactory.getNewPlayer('bot', ball) if mode == MatchMode.SINGLE else ElementFactory.getNewPlayer('player2'))
         self.objects.append(ElementFactory.getGoal(1))
         self.objects.append(ElementFactory.getGoal(2))
         self.player1: Player = next(obj for obj in self.objects if obj.name == 'player1')
@@ -116,11 +117,11 @@ class Match:
         overlay.fill((255, 255, 255))
         self.window.blit(overlay, (10, 5))
         font: Font = pygame.font.SysFont(name="Arial", size=14, bold=True)
-        legend = 'W    - PULA'
+        legend = ' W   - PULA'
         legendSurf = font.render(legend, True, TITLE_COLOR).convert_alpha()
         legendRect = legendSurf.get_rect(topleft=(20, 10))
         self.window.blit(legendSurf, legendRect)
-        legend = 'A D  - MOVIMENTO'
+        legend = 'A  D - MOVIMENTO'
         legendSurf = font.render(legend, True, TITLE_COLOR).convert_alpha()
         legendRect = legendSurf.get_rect(topleft=(20, 26))
         self.window.blit(legendSurf, legendRect)
@@ -135,7 +136,7 @@ class Match:
             overlay.fill((255, 255, 255))
             self.window.blit(overlay, (400, 5))
             font: Font = pygame.font.SysFont(name="Arial", size=14, bold=True)
-            legend = '↑       - PULA'
+            legend = '   ↑    - PULA'
             legendSurf = font.render(legend, True, TITLE_COLOR).convert_alpha()
             legendRect = legendSurf.get_rect(topleft=(400 + 10, 10))
             self.window.blit(legendSurf, legendRect)

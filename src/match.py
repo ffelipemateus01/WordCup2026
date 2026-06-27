@@ -1,5 +1,6 @@
 import pygame
 from pygame.font import Font
+from pygame import Surface
 from enum import Enum
 from src.object import IObject
 from src.factory import ElementFactory
@@ -20,11 +21,11 @@ class Match:
         self.mode = mode
         self.objects: list[IObject] = []
         self.objects.extend(ElementFactory.getRandomField())
-        self.objects.append(ElementFactory.getGoal(1))
-        self.objects.append(ElementFactory.getGoal(2))
         self.objects.append(ElementFactory.getNewPlayer('player1'))
         self.objects.append(ElementFactory.getNewPlayer('bot') if mode == MatchMode.SINGLE else ElementFactory.getNewPlayer('player2'))
         self.objects.append(ElementFactory.getRandomBall())
+        self.objects.append(ElementFactory.getGoal(1))
+        self.objects.append(ElementFactory.getGoal(2))
         self.player1: Player = next(obj for obj in self.objects if obj.name == 'player1')
         self.player2: Player | Bot = next(obj for obj in self.objects if obj.name == 'player2' or obj.name == 'bot')
         self.collisionMediator = CollisionMediator(self.objects)
@@ -33,12 +34,15 @@ class Match:
 
     def run(self):
         clock = pygame.time.Clock()
+        pygame.mixer_music.load(f'./assets/songs/stadium.mp3')
+        pygame.mixer_music.set_volume(0.4)
+        pygame.mixer_music.play(-1)
         while True:
             clock.tick(60)
             for obj in self.objects:
                 self.window.blit(source=obj.surf, dest=obj.rect)
                 obj.move()
-            self.collisionMediator.verify_collision()
+            scorer = self.collisionMediator.verify_collision()
             self.drawLegend()
             score = f'{self.player1.score}x{self.player2.score}'
             scoreSurf = self.font.render(score, True, TITLE_COLOR).convert_alpha()
@@ -49,9 +53,53 @@ class Match:
             if winner:
                 self.showWinner(winner)
                 return
-            
+            if scorer:
+                self.showGoalOverlay(scorer)
             self.getEvent()
             pygame.display.flip()
+
+    def showGoalOverlay(self, name: str):
+        font = pygame.font.SysFont('Arial', 72, bold=True)
+        txt = 'GOOOLLL!!!'
+        goalSurf = font.render(txt, True, TITLE_COLOR).convert_alpha()
+        goalShadowSurf = font.render(txt, True, (0, 0, 0)).convert_alpha()
+        goalShadowSurf.set_alpha(120)
+        font = pygame.font.SysFont('Arial', 60, bold=True)
+        txt = f'{self.player1.score} x {self.player2.score}'
+        placarSurf = font.render(txt, True, (0, 0, 0)).convert_alpha()
+        font = pygame.font.SysFont('Arial', 48, bold=True)
+        txt = f'{NAME_LABELS.get(name, name)} marcou'
+        playerSurf = font.render(txt, True, (0, 0, 0)).convert_alpha()
+        overlay = pygame.Surface(self.window.get_size())
+        overlay.set_alpha(180)
+        overlay.fill((255, 255, 255))
+        clock = pygame.time.Clock()
+        TICK = 60
+        TIME_SHOW = 1.65
+        quitGoalScreen = TIME_SHOW * TICK
+        cont = 0
+        pygame.mixer_music.load(f'./assets/songs/goal.mp3')
+        pygame.mixer_music.set_volume(0.8)
+        pygame.mixer_music.play()
+        while True:
+            cont += 1
+            clock.tick(TICK)
+            self.window.blit(overlay, (0, 0))
+            self.window.blit(goalSurf, (WIN_WIDTH / 2 - goalSurf.get_width() / 2, 40))
+            self.window.blit(placarSurf, (WIN_WIDTH / 2 - placarSurf.get_width() / 2, 135))
+            self.window.blit(playerSurf, (WIN_WIDTH / 2 - playerSurf.get_width() / 2, 225))
+            pygame.display.flip()
+
+            if cont >= quitGoalScreen:
+                pygame.mixer_music.load(f'./assets/songs/stadium.mp3')
+                pygame.mixer_music.set_volume(0.4)
+                pygame.mixer_music.play(-1)
+                return
+            
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
 
     def getEvent(self):
         '''Processa a ação do usuário.'''
@@ -63,30 +111,37 @@ class Match:
                 self.pause()
 
     def drawLegend(self):
-        overlay = pygame.Surface((170, 40))
+        overlay = pygame.Surface((170, 60))
         overlay.set_alpha(180)
         overlay.fill((255, 255, 255))
         self.window.blit(overlay, (10, 5))
         font: Font = pygame.font.SysFont(name="Arial", size=14, bold=True)
-        legend = 'W   - PULA'
-        legendSurf = font.render(legend, True, TITLE_COLOR).convert_alpha()
-        legendRect = legendSurf.get_rect(topleft=(20, 26))
-        self.window.blit(legendSurf, legendRect)
-        legend = 'A D - MOVIMENTO'
+        legend = 'W    - PULA'
         legendSurf = font.render(legend, True, TITLE_COLOR).convert_alpha()
         legendRect = legendSurf.get_rect(topleft=(20, 10))
         self.window.blit(legendSurf, legendRect)
+        legend = 'A D  - MOVIMENTO'
+        legendSurf = font.render(legend, True, TITLE_COLOR).convert_alpha()
+        legendRect = legendSurf.get_rect(topleft=(20, 26))
+        self.window.blit(legendSurf, legendRect)
+        legend = 'ESC - PAUSE'
+        legendSurf = font.render(legend, True, TITLE_COLOR).convert_alpha()
+        legendRect = legendSurf.get_rect(topleft=(20, 42))
+        self.window.blit(legendSurf, legendRect)
 
         if isinstance(self.player2, Player):
+            overlay = pygame.Surface((170, 40))
+            overlay.set_alpha(180)
+            overlay.fill((255, 255, 255))
             self.window.blit(overlay, (400, 5))
             font: Font = pygame.font.SysFont(name="Arial", size=14, bold=True)
             legend = '↑       - PULA'
             legendSurf = font.render(legend, True, TITLE_COLOR).convert_alpha()
-            legendRect = legendSurf.get_rect(topleft=(400 + 10, 26))
+            legendRect = legendSurf.get_rect(topleft=(400 + 10, 10))
             self.window.blit(legendSurf, legendRect)
             legend = '← → - MOVIMENTO'
             legendSurf = font.render(legend, True, TITLE_COLOR).convert_alpha()
-            legendRect = legendSurf.get_rect(topleft=(400 + 10, 10))
+            legendRect = legendSurf.get_rect(topleft=(400 + 10, 26))
             self.window.blit(legendSurf, legendRect)
 
     def pause(self):
@@ -139,6 +194,9 @@ class Match:
         enterShadowSurf.set_alpha(200)
 
         clock = pygame.time.Clock()
+        pygame.mixer_music.load(f'./assets/songs/victory.mp3')
+        pygame.mixer_music.set_volume(0.8)
+        pygame.mixer_music.play()
         while True:
             clock.tick(60)
             self.window.blit(winnerShadowSurf, (WIN_WIDTH / 2 - winnerSurf.get_width() / 2 + 3, WIN_HEIGHT / 4 + 3))
@@ -152,4 +210,5 @@ class Match:
                     pygame.quit()
                     quit()
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+
                     return

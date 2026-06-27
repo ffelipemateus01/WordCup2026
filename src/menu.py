@@ -15,6 +15,9 @@ class Menu:
     def show(self) -> int:
         '''Mostra o menu e retorna a opção do usuário.'''
         self.userOption = 0
+        pygame.mixer_music.load(f'./assets/songs/menu.mp3')
+        pygame.mixer_music.set_volume(0.4)
+        pygame.mixer_music.play(-1)
         while True:
             self.window.blit(source=self.surf, dest=self.rect)
             self.drawText('Copa do Mundo', (WIN_WIDTH / 2, WIN_HEIGHT / 4.5), color=TITLE_COLOR, size=60, bold=True, shadow=True)

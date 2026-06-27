@@ -21,10 +21,26 @@ class Menu:
             self.drawText('2026', (WIN_WIDTH / 2, WIN_HEIGHT / 4.5 + GAP_MENU * 1.5), color=TITLE_COLOR, size=60, bold=True, shadow=True)
             for option, label in menuOptions.items():
                 self.drawText(label, (WIN_WIDTH / 2, (WIN_HEIGHT / 2) + (1 + option) * GAP_MENU), color=SELECTED_ITEM_COLOR if option == self.userOption else ITEM_COLOR)
+            self.drawLegend()
             pygame.display.flip()
             enter = self.processAction()
             if enter:
                 return self.userOption
+            
+    def drawLegend(self):
+        overlay = pygame.Surface((170, 40))
+        overlay.set_alpha(180)
+        overlay.fill((255, 255, 255))
+        self.window.blit(overlay, (10, 5))
+        font: Font = pygame.font.SysFont(name="Arial", size=14, bold=True)
+        legend = '↑ ↓         - NAVEGAR'
+        legendSurf = font.render(legend, True, TITLE_COLOR).convert_alpha()
+        legendRect = legendSurf.get_rect(topleft=(20, 10))
+        self.window.blit(legendSurf, legendRect)
+        legend = 'ENTER - CONFIRMAR'
+        legendSurf = font.render(legend, True, TITLE_COLOR).convert_alpha()
+        legendRect = legendSurf.get_rect(topleft=(20, 26))
+        self.window.blit(legendSurf, legendRect)
 
     def drawText(self, text, center: tuple, size: int = 48, color: tuple = ITEM_COLOR, bold: bool = False, shadow: bool = False):
         '''Desenha um texto na tela.'''

@@ -33,6 +33,9 @@ class Ranking:
             
             self.drawText('ENTER / ESC para voltar', (WIN_WIDTH / 2, WIN_HEIGHT - 25), size=16)
             pygame.display.flip()
+            if self.processAction():
+                return
+
 
     def drawText(self, text, center: tuple, size: int = 22, color: tuple = ITEM_COLOR, bold: bool = False, shadow: bool = False):
         font: Font = pygame.font.SysFont(name="Arial", size=size, bold=bold)

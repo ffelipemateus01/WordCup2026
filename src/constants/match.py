@@ -8,8 +8,8 @@ BALL_SIZE = (45, 45)
 GOAL_SIZE = (127, 170)
 
 ENTITIES_SPEED = {
-    'player1': 3,
-    'player2': 3,
+    'player1': 4,
+    'player2': 4,
     'bot': 4,
     'goal1': 0,
     'goal2': 0,
@@ -33,7 +33,7 @@ ENTITIES_GRAVITY_FORCE = {
     'bot': 1,
     'goal1': 999,
     'goal2': 999,
-    'ball': 0.1,
+    'ball': 0.32,
     'field': 999
 }
 
@@ -47,12 +47,12 @@ PLAYER_KEY_SHOOT = {'player1': pygame.K_LCTRL,
                     'player2': pygame.K_RCTRL}
 
 JUMP_FORCE = 18
-BALL_HIT_FORCE = 8
-BALL_LIFT_FORCE = 2
+BALL_HIT_FORCE = 6
+BALL_LIFT_FORCE = 7
 BALL_HEAD_FORCE = 10
-BALL_AIR_RESISTENCE = 0.1
+BALL_AIR_RESISTENCE = 0.025
 
-WIN_SCORE = 1
+WIN_SCORE = 5
 
 NAME_LABELS = {
     'player1': 'Player 1',

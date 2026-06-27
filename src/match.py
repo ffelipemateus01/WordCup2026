@@ -1,11 +1,13 @@
 import pygame
+from pygame.font import Font
 from enum import Enum
 from src.object import IObject
 from src.factory import ElementFactory
 from src.mediator import CollisionMediator
 from src.entities.bot import Bot
 from src.entities.player import Player
-from src.constants.match import WIN_WIDTH, WIN_HEIGHT, WIN_SCORE
+from src.constants.match import WIN_WIDTH, WIN_HEIGHT, WIN_SCORE, NAME_LABELS
+from src.constants.menu import TITLE_COLOR
 from src.database import DBProxy
 
 class MatchMode(Enum):
@@ -37,10 +39,12 @@ class Match:
                 self.window.blit(source=obj.surf, dest=obj.rect)
                 obj.move()
             self.collisionMediator.verify_collision()
+            self.drawLegend()
             score = f'{self.player1.score}x{self.player2.score}'
-            scoreSurf = self.font.render(score, True, (0, 0, 0)).convert_alpha()
+            scoreSurf = self.font.render(score, True, TITLE_COLOR).convert_alpha()
+            scoreShadowSurf = self.font.render(score, True, (0, 0, 0)).convert_alpha()
+            self.window.blit(scoreShadowSurf, (WIN_WIDTH / 2 - scoreSurf.get_width() / 2 + 3, 10 + 3))
             self.window.blit(scoreSurf, (WIN_WIDTH / 2 - scoreSurf.get_width() / 2, 10))
-
             winner = self.getWinner()
             if winner:
                 self.showWinner(winner)
@@ -58,6 +62,33 @@ class Match:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 self.pause()
 
+    def drawLegend(self):
+        overlay = pygame.Surface((170, 40))
+        overlay.set_alpha(180)
+        overlay.fill((255, 255, 255))
+        self.window.blit(overlay, (10, 5))
+        font: Font = pygame.font.SysFont(name="Arial", size=14, bold=True)
+        legend = 'W   - PULA'
+        legendSurf = font.render(legend, True, TITLE_COLOR).convert_alpha()
+        legendRect = legendSurf.get_rect(topleft=(20, 26))
+        self.window.blit(legendSurf, legendRect)
+        legend = 'A D - MOVIMENTO'
+        legendSurf = font.render(legend, True, TITLE_COLOR).convert_alpha()
+        legendRect = legendSurf.get_rect(topleft=(20, 10))
+        self.window.blit(legendSurf, legendRect)
+
+        if isinstance(self.player2, Player):
+            self.window.blit(overlay, (400, 5))
+            font: Font = pygame.font.SysFont(name="Arial", size=14, bold=True)
+            legend = '↑       - PULA'
+            legendSurf = font.render(legend, True, TITLE_COLOR).convert_alpha()
+            legendRect = legendSurf.get_rect(topleft=(400 + 10, 26))
+            self.window.blit(legendSurf, legendRect)
+            legend = '← → - MOVIMENTO'
+            legendSurf = font.render(legend, True, TITLE_COLOR).convert_alpha()
+            legendRect = legendSurf.get_rect(topleft=(400 + 10, 10))
+            self.window.blit(legendSurf, legendRect)
+
     def pause(self):
         font = pygame.font.SysFont('Arial', 64, bold=True)
         pauseSurf = font.render('Pausado!', True, (255, 255, 255)).convert_alpha()
@@ -67,7 +98,7 @@ class Match:
         enterSurf = font.render('Pressione ENTER para voltar a partida', True, (255, 255, 255)).convert_alpha()
 
         overlay = pygame.Surface(self.window.get_size())
-        overlay.set_alpha(180)
+        overlay.set_alpha(90)
         overlay.fill((0, 0, 0))
 
         clock = pygame.time.Clock()
@@ -97,23 +128,22 @@ class Match:
         self.db.save_win(winner.name)
         self.db.close()
         font = pygame.font.SysFont('Arial', 64, bold=True)
-        txt = f'{winner.name} venceu!'
-        winnerSurf = font.render(txt, True, (255, 255, 255)).convert_alpha()
-        font = pygame.font.SysFont('Arial', 42, bold=True)
-        placarSurf = font.render(f'{self.player1.score} x {self.player2.score}', True, (255, 255, 255)).convert_alpha()
+        txt = f'{NAME_LABELS.get(winner.name, winner.name)} venceu!'
+        winnerSurf = font.render(txt, True, TITLE_COLOR).convert_alpha()
+        winnerShadowSurf = font.render(txt, True, (0, 0, 0)).convert_alpha()
+        winnerShadowSurf.set_alpha(200)
         font = pygame.font.SysFont('Arial', 24, bold=True)
-        enterSurf = font.render('Pressione ENTER para voltar ao menu', True, (255, 255, 255)).convert_alpha()
-
-        overlay = pygame.Surface(self.window.get_size())
-        overlay.set_alpha(180)
-        overlay.fill((0, 0, 0))
+        txt = 'Pressione ENTER para voltar ao menu'
+        enterSurf = font.render(txt, True, TITLE_COLOR).convert_alpha()
+        enterShadowSurf = font.render(txt, True, (0, 0, 0)).convert_alpha()
+        enterShadowSurf.set_alpha(200)
 
         clock = pygame.time.Clock()
         while True:
             clock.tick(60)
-            self.window.blit(overlay, (0, 0))
+            self.window.blit(winnerShadowSurf, (WIN_WIDTH / 2 - winnerSurf.get_width() / 2 + 3, WIN_HEIGHT / 4 + 3))
             self.window.blit(winnerSurf, (WIN_WIDTH / 2 - winnerSurf.get_width() / 2, WIN_HEIGHT / 4))
-            self.window.blit(placarSurf, (WIN_WIDTH / 2 - placarSurf.get_width() / 2, WIN_HEIGHT / 4 + winnerSurf.get_height() + 20))
+            self.window.blit(enterShadowSurf, (WIN_WIDTH / 2 - enterSurf.get_width() / 2 + 3, WIN_HEIGHT / 4 + winnerSurf.get_height() + enterSurf.get_height() + 50 + 3))
             self.window.blit(enterSurf, (WIN_WIDTH / 2 - enterSurf.get_width() / 2, WIN_HEIGHT / 4 + winnerSurf.get_height() + enterSurf.get_height() + 50))
             pygame.display.flip()
 

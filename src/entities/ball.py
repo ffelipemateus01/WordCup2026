@@ -5,7 +5,7 @@ class Ball(IObject):
     def __init__(self, skin: int):
         super().__init__('ball', f'ball-{skin}')
         self.velocityX = 0
-        
+
     def move(self):
         super().move()
         self.rect.x += self.velocityX

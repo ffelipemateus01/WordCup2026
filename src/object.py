@@ -30,9 +30,11 @@ class IObject(ABC):
     def __gravityAction(self):
         self.velocityY += self.gravityForce
         self.rect.y += self.velocityY
-        if self.isOnGround():
+        if self.isOnGround() and self.name != 'ball':
             self.rect.bottom = GROUND_HEIGHT
             self.velocityY = 0
+        elif self.isOnGround():
+            self.velocityY = -abs(self.velocityY) / 1.1
 
     def isOnGround(self):
         return self.rect.bottom >= GROUND_HEIGHT

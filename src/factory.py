@@ -6,9 +6,14 @@ from src.entities.ball import Ball
 from random import randint
 from src.constants.skins import MAX_FIELDS_SKINS, MAX_BALLS_SKINS, MAX_PLAYERS_SKINS, MAX_GOALS_SKINS
 import os
+import sys
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ASSETS_DIR = os.path.join(BASE_DIR, '..', 'assets')
+if getattr(sys, 'frozen', False):
+    BASE_DIR = os.path.dirname(sys.executable)
+    ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    ASSETS_DIR = os.path.join(BASE_DIR, '..', 'assets')
 
 class ElementFactory:
     @staticmethod

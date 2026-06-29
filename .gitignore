@@ -1,5 +1,8 @@
-.venv
+.venv/
 flow.txt
 __pycache__/
 worldcup.db
 *.db
+setup.py
+*-info
+build/

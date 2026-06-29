@@ -55,7 +55,7 @@ class Menu:
         if shadow:
             shadowSurf = font.render(text, True, (0, 0, 0)).convert_alpha()
             shadowSurf.set_alpha(200)
-            shadowRect = shadowSurf.get_rect(center=(center[0] + 3, center[1] + 3))
+            shadowRect = shadowSurf.get_rect(center=(center[0] + 1.5, center[1] + 1.5))
             self.window.blit(shadowSurf, shadowRect)
         surf: Surface = font.render(text, True, color).convert_alpha()
         rect: Rect = surf.get_rect(center=center)

@@ -5,15 +5,17 @@ from src.entities.bot import Bot
 from src.entities.ball import Ball
 from random import randint
 from src.constants.skins import MAX_FIELDS_SKINS, MAX_BALLS_SKINS, MAX_PLAYERS_SKINS, MAX_GOALS_SKINS
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ASSETS_DIR = os.path.join(BASE_DIR, '..', 'assets')
 
 class ElementFactory:
     @staticmethod
     def getRandomField() -> list[FieldElement]:
         random = randint(1, MAX_FIELDS_SKINS)
-        return [FieldElement(random, 1), 
-                FieldElement(random, 2),
-                FieldElement(random, 3),
-                FieldElement(random, 4)]
+        numImages = len(os.listdir(os.path.join(ASSETS_DIR, f'field-{random}')))
+        return [FieldElement(random, i) for i in range(1, numImages + 1)]
 
     @staticmethod
     def getGoal(number: int) -> Goal:

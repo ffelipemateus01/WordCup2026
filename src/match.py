@@ -48,7 +48,7 @@ class Match:
             score = f'{self.player1.score}x{self.player2.score}'
             scoreSurf = self.font.render(score, True, TITLE_COLOR).convert_alpha()
             scoreShadowSurf = self.font.render(score, True, (0, 0, 0)).convert_alpha()
-            self.window.blit(scoreShadowSurf, (WIN_WIDTH / 2 - scoreSurf.get_width() / 2 + 3, 10 + 3))
+            self.window.blit(scoreShadowSurf, (WIN_WIDTH / 2 - scoreSurf.get_width() / 2 + 1.5, 10 + 1.5))
             self.window.blit(scoreSurf, (WIN_WIDTH / 2 - scoreSurf.get_width() / 2, 10))
             winner = self.getWinner()
             if winner:
@@ -59,7 +59,12 @@ class Match:
             self.getEvent()
             pygame.display.flip()
 
-    def showGoalOverlay(self, name: str):
+    def showGoalOverlay(self, name: str): 
+        overlayBgSurf = pygame.image.load('assets/goalBg.png').convert_alpha()
+        overlayBgRect = overlayBgSurf.get_rect(left=0, top=0)
+        overlayTxt = pygame.Surface(self.window.get_size())
+        overlayTxt.set_alpha(180)
+        overlayTxt.fill((255, 255, 255))
         font = pygame.font.SysFont('Arial', 72, bold=True)
         txt = 'GOOOLLL!!!'
         goalSurf = font.render(txt, True, TITLE_COLOR).convert_alpha()
@@ -71,9 +76,6 @@ class Match:
         font = pygame.font.SysFont('Arial', 48, bold=True)
         txt = f'{NAME_LABELS.get(name, name)} marcou'
         playerSurf = font.render(txt, True, (0, 0, 0)).convert_alpha()
-        overlay = pygame.Surface(self.window.get_size())
-        overlay.set_alpha(180)
-        overlay.fill((255, 255, 255))
         clock = pygame.time.Clock()
         TICK = 60
         TIME_SHOW = 1.65
@@ -85,7 +87,9 @@ class Match:
         while True:
             cont += 1
             clock.tick(TICK)
-            self.window.blit(overlay, (0, 0))
+            self.window.blit(overlayBgSurf, overlayBgRect)
+            self.window.blit(overlayTxt, overlayBgRect)
+            self.window.blit(goalShadowSurf, (WIN_WIDTH / 2 - goalShadowSurf.get_width() / 2 + 1.5, 40 + 1.5))
             self.window.blit(goalSurf, (WIN_WIDTH / 2 - goalSurf.get_width() / 2, 40))
             self.window.blit(placarSurf, (WIN_WIDTH / 2 - placarSurf.get_width() / 2, 135))
             self.window.blit(playerSurf, (WIN_WIDTH / 2 - playerSurf.get_width() / 2, 225))
@@ -147,20 +151,23 @@ class Match:
 
     def pause(self):
         font = pygame.font.SysFont('Arial', 64, bold=True)
-        pauseSurf = font.render('Pausado!', True, (255, 255, 255)).convert_alpha()
+        pauseSurf = font.render('Pausado!', True, (0, 0, 0)).convert_alpha()
         font = pygame.font.SysFont('Arial', 42, bold=True)
-        placarSurf = font.render(f'{self.player1.score} x {self.player2.score}', True, (255, 255, 255)).convert_alpha()
+        placarSurf = font.render(f'{self.player1.score} x {self.player2.score}', True, (0, 0, 0)).convert_alpha()
         font = pygame.font.SysFont('Arial', 24, bold=True)
-        enterSurf = font.render('Pressione ENTER para voltar a partida', True, (255, 255, 255)).convert_alpha()
+        enterSurf = font.render('Pressione ENTER para voltar a partida', True, (0, 0, 0)).convert_alpha()
 
-        overlay = pygame.Surface(self.window.get_size())
-        overlay.set_alpha(90)
-        overlay.fill((0, 0, 0))
+        overlayBgSurf = pygame.image.load('assets/menuBg.png').convert_alpha()
+        overlayBgRect = overlayBgSurf.get_rect(left=0, top=0)
+        overlayTxt = pygame.Surface(self.window.get_size())
+        overlayTxt.set_alpha(180)
+        overlayTxt.fill((255, 255, 255))
 
         clock = pygame.time.Clock()
         while True:
             clock.tick(60)
-            self.window.blit(overlay, (0, 0))
+            self.window.blit(overlayBgSurf, overlayBgRect)
+            self.window.blit(overlayTxt, overlayBgRect)
             self.window.blit(pauseSurf, (WIN_WIDTH / 2 - pauseSurf.get_width() / 2, WIN_HEIGHT / 4))
             self.window.blit(placarSurf, (WIN_WIDTH / 2 - placarSurf.get_width() / 2, WIN_HEIGHT / 4 + pauseSurf.get_height() + 20))
             self.window.blit(enterSurf, (WIN_WIDTH / 2 - enterSurf.get_width() / 2, WIN_HEIGHT / 4 + pauseSurf.get_height() + enterSurf.get_height() + 50))
@@ -187,22 +194,28 @@ class Match:
         txt = f'{NAME_LABELS.get(winner.name, winner.name)} venceu!'
         winnerSurf = font.render(txt, True, TITLE_COLOR).convert_alpha()
         winnerShadowSurf = font.render(txt, True, (0, 0, 0)).convert_alpha()
-        winnerShadowSurf.set_alpha(200)
         font = pygame.font.SysFont('Arial', 24, bold=True)
         txt = 'Pressione ENTER para voltar ao menu'
-        enterSurf = font.render(txt, True, TITLE_COLOR).convert_alpha()
-        enterShadowSurf = font.render(txt, True, (0, 0, 0)).convert_alpha()
-        enterShadowSurf.set_alpha(200)
+        enterSurf = font.render(txt, True, (0, 0, 0)).convert_alpha()
+        # enterShadowSurf = font.render(txt, True, (0, 0, 0)).convert_alpha()
 
-        clock = pygame.time.Clock()
         pygame.mixer_music.load(f'./assets/songs/victory.mp3')
         pygame.mixer_music.set_volume(0.8)
         pygame.mixer_music.play()
+
+        overlayBgSurf = pygame.image.load('assets/menuBg.png').convert_alpha()
+        overlayBgRect = overlayBgSurf.get_rect(left=0, top=0)
+        overlayTxt = pygame.Surface(self.window.get_size())
+        overlayTxt.set_alpha(180)
+        overlayTxt.fill((255, 255, 255))
+        clock = pygame.time.Clock()
         while True:
             clock.tick(60)
-            self.window.blit(winnerShadowSurf, (WIN_WIDTH / 2 - winnerSurf.get_width() / 2 + 3, WIN_HEIGHT / 4 + 3))
+            self.window.blit(overlayBgSurf, overlayBgRect)
+            self.window.blit(overlayTxt, overlayBgRect)
+            self.window.blit(winnerShadowSurf, (WIN_WIDTH / 2 - winnerSurf.get_width() / 2 + 1.5, WIN_HEIGHT / 4 + 1.5))
             self.window.blit(winnerSurf, (WIN_WIDTH / 2 - winnerSurf.get_width() / 2, WIN_HEIGHT / 4))
-            self.window.blit(enterShadowSurf, (WIN_WIDTH / 2 - enterSurf.get_width() / 2 + 3, WIN_HEIGHT / 4 + winnerSurf.get_height() + enterSurf.get_height() + 50 + 3))
+            # self.window.blit(enterShadowSurf, (WIN_WIDTH / 2 - enterSurf.get_width() / 2 + 1.5, WIN_HEIGHT / 4 + winnerSurf.get_height() + enterSurf.get_height() + 50 + 1.5))
             self.window.blit(enterSurf, (WIN_WIDTH / 2 - enterSurf.get_width() / 2, WIN_HEIGHT / 4 + winnerSurf.get_height() + enterSurf.get_height() + 50))
             pygame.display.flip()
 

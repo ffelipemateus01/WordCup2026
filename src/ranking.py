@@ -20,24 +20,23 @@ class Ranking:
 
         while True:
             self.window.blit(source=self.surf, dest=self.rect)
+            overlayBgSurf = pygame.image.load('assets/menuBg.png').convert_alpha()
+            overlayBgRect = overlayBgSurf.get_rect(left=0, top=0)
+            overlayTxt = pygame.Surface(self.window.get_size())
+            overlayTxt.set_alpha(180)
+            overlayTxt.fill((255, 255, 255))
+            self.window.blit(overlayBgSurf, overlayBgRect)
+            self.window.blit(overlayTxt, overlayBgRect)
             self.drawText('VITÓRIAS', (WIN_WIDTH / 2, 35), color=TITLE_COLOR, size=40, bold=True, shadow=True)
             
             if not ranking:
                 self.drawText('Nenhuma partida registrada', (WIN_WIDTH / 2, WIN_HEIGHT / 2), size=20)
             else:
-                overlay = pygame.Surface((200, 100))
-                overlay.set_alpha(140)
-                overlay.fill((255, 255, 255))
-                self.window.blit(overlay, (188, 65))
                 for i, (name, wins) in enumerate(ranking):
                     label = NAME_LABELS.get(name)
                     txt = f'{i + 1}. {label} - {wins}'
                     color = SELECTED_ITEM_COLOR if i == 0 else ITEM_COLOR
-                    self.drawText(txt, (WIN_WIDTH / 2, 90 + i * 24), color=color, size=22, bold=i==0)
-            overlay = pygame.Surface((200, 30))
-            overlay.set_alpha(140)
-            overlay.fill((255, 255, 255))
-            self.window.blit(overlay, (188, 283))
+                    self.drawText(txt, (WIN_WIDTH / 2, 90 + i * 24), color=color if i==0 else (0, 0, 0), size=22, bold=i==0, shadow=i==0)
             self.drawText('ENTER / ESC para voltar', (WIN_WIDTH / 2, WIN_HEIGHT - 25), size=16)
             pygame.display.flip()
             if self.processAction():
@@ -48,7 +47,7 @@ class Ranking:
         if shadow:
             shadowSurf = font.render(text, True, (0, 0, 0)).convert_alpha()
             shadowSurf.set_alpha(200)
-            shadowRect = shadowSurf.get_rect(center = (center[0] + 3, center[1] + 3))
+            shadowRect = shadowSurf.get_rect(center = (center[0] + 1.5, center[1] + 1.5))
             self.window.blit(shadowSurf, shadowRect)
         surf: Surface = font.render(text, True, color).convert_alpha()
         rect: Rect = surf.get_rect(center=center)

@@ -2,7 +2,7 @@ import sqlite3
 from datetime import datetime
 
 class DBProxy:
-    def __init__(self, db_name: str = 'wordcup.db'):
+    def __init__(self, db_name: str = 'worldcup.db'):
         self.db_name = db_name
         self.connection = sqlite3.connect(db_name)
         self.connection.execute('''

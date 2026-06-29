@@ -1,3 +1,5 @@
 .venv
 flow.txt
 __pycache__/
+worldcup.db
+*.db
